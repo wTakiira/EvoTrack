@@ -40,20 +40,27 @@ const TimerPicker: React.FC<TimerPickerProps> = ({ label, onTimeChange, initialT
                     onTimeChange(formattedTime); // Pass the time back to parent component
                     setShowPicker(false);
                 }}
-                modalTitle="Set Alarm"
+                modalTitle="Temps d'une répétition"
                 onCancel={() => setShowPicker(false)}
                 closeOnOverlayPress
                 Audio={Audio}
                 LinearGradient={LinearGradient}
                 Haptics={Haptics}
                 hideHours={true}
+                secondLabel={"sec"}
+                minuteLabel={"min"}
                 repeatMinuteNumbersNTimes={1}
                 repeatSecondNumbersNTimes={1}
                 disableInfiniteScroll={true}
                 styles={{
                     theme: 'dark',
-                    confirmButton: { backgroundColor: '#09DEE8', borderColor: '#09DEE8', color: '#fff' },
-                    cancelButton: { backgroundColor: 'transparent', borderColor: '#342FBD', color: '#fff' },
+                    confirmButton: { backgroundColor: '#09DEE8', borderColor: '#09DEE8', color: '#fff', width:"90%", textAlign:"center"},
+                    cancelButton: { backgroundColor: 'transparent', borderColor: '#342FBD', color: '#fff' , width:"90%", textAlign:"center"},
+                    container: {width:"100%", position:"absolute", bottom:0 },
+                    pickerContainer: {width:"80%", alignItems:"center", justifyContent:"center",height:200,},
+                    pickerItemContainer: {width: "30%", alignItems:"center", height:70},
+                    pickerItem: {fontSize:40},
+                    pickerLabel: {fontSize:25},
                 }}
             />
         </View>
@@ -65,7 +72,7 @@ const styles = StyleSheet.create({
         marginBottom: 30,
     },
     infoText: {
-        fontSize: 18,
+        fontSize: 20,
         color: '#fff',
         marginBottom: 10,
     },
