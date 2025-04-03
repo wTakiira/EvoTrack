@@ -1,11 +1,15 @@
-import { StyleSheet, View, Text, Modal, Pressable, TouchableOpacity } from 'react-native';
+import { StyleSheet, View, Text, Modal, Pressable, TouchableOpacity, TextInput } from 'react-native';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { Button } from "@rneui/base"; 
 import { router, useLocalSearchParams } from 'expo-router';
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import Svg, { Circle } from 'react-native-svg';
 import { Audio } from 'expo-av';
 import * as Speech from 'expo-speech';
-import { Ionicons } from '@expo/vector-icons'; 
+import { Ionicons } from '@expo/vector-icons';
+
+
+
 
 // Fonction pour convertir "MM:SS" en secondes
 const convertTimeArray = (timeInput: string | string[]) => {
@@ -31,6 +35,8 @@ const speak = (text) => {
     });
 };
 
+
+
 // Fonction pour formater un nombre de secondes en "MM:SS"
 const formatTime = (seconds: number) => {
     const min = Math.floor(seconds / 60);
@@ -51,6 +57,8 @@ export default function SessionScreen() {
     const [isResting, setIsResting] = useState(false);
     const [sessionFinished, setSessionFinished] = useState(false);
     const [isPlaying, setIsPlaying] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);    
+
 
     // Récupération du bon temps pour le timer
     const currentRepTime = repTimeSecArray[Math.min(currentRep - 1, repTimeSecArray.length - 1)] || 10;
@@ -76,6 +84,36 @@ export default function SessionScreen() {
                 <View style={styles.modalContainer}>
                     <View style={styles.modalContent}>
                         <Text style={styles.modalTitle}>🎉 Séance Terminée !</Text>
+                        <Button
+                            buttonStyle={{ width: "100%", borderRadius: 8, borderWidth: 2,borderColor: "#000",backgroundColor:"#6e6e6e"}}
+                            containerStyle={{ width: "100%",margin: 5, alignSelf:"center"}}
+                            disabledTitleStyle={{ color: "#00F" }}
+                            loadingProps={{ animating: true }}
+                            onPress={() => setIsSaving(true)}
+                            title="Sauvegarder ta séance"
+                            titleStyle={{ marginHorizontal: 5 }}
+                        />
+                        {
+                            isSaving && (
+                            <View style={styles.savingView}>
+                                <Text style={styles.saveText}>Entrer un nom pour la séance :</Text>
+                                <TextInput style={styles.saveInput} placeholder='Nom de la séance' placeholderTextColor='#828282'></TextInput>
+                                <Button
+                                buttonStyle={{ width: "90%", borderRadius: 8, borderWidth: 2,borderColor: "#09DEE8",backgroundColor:"#342FBD", alignSelf:"center"}}
+                                containerStyle={{ width: "100%",margin: 5, alignSelf:"center"}}
+                                disabledTitleStyle={{ color: "#00F" }}
+                                loadingProps={{ animating: true }}
+                                onPress={() => {
+                                    setIsSaving(false);
+                                    setSessionFinished(false); 
+                                    router.push('/form');
+                                }}
+                                title="Valider"
+                                titleStyle={{ marginHorizontal: 5 }}
+                            />
+                            </View>
+                            )
+                        }
                         <Pressable 
                             style={styles.modalButton} 
                             onPress={() => { 
@@ -98,7 +136,7 @@ export default function SessionScreen() {
             {/* Conteneur du timer et du cercle interactif */}
             <TouchableOpacity 
                 style={styles.timerContainer} 
-                onPress={() => setIsPlaying(!isPlaying)} // Toggle play/pause
+                onPress={() => setIsPlaying(!isPlaying)}
             >
                 {/* Cercle SVG avec effet néon */}
                 <Svg height="200" width="200" style={{ position: "absolute" }}>
@@ -263,12 +301,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     modalContent: {
+        position:"absolute",
         backgroundColor: '#FFF',
         padding: 20,
         borderRadius: 10,
         alignItems: 'center',
-        width: "80%",
-        height: "60%",
+        width: "90%",
+        height: 400,
     },
     modalTitle: {
         fontSize: 20,
@@ -310,4 +349,22 @@ const styles = StyleSheet.create({
         backgroundColor: "#2E7D7D",
         transform: [{ skewY: "20deg" }],
     },
+    savingView: {
+     backgroundColor:"#000F22",
+     width: "100%",
+     height:200,
+     padding:10,
+     borderRadius:12,
+     gap:25,
+    },
+    saveText:{
+     fontSize:20,
+     color:"#fff",
+    },
+    saveInput:{
+     backgroundColor: "#fff",
+     color: "#000",
+     fontSize:18,
+     borderColor:"#09DEE8",
+    }
 });

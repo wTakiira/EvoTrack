@@ -2,14 +2,16 @@ import { StyleSheet, TextInput, View, Text, Image, ScrollView } from 'react-nati
 import TimerPicker from '../../components/TimerPicker';
 import { Button } from "@rneui/base"; 
 import { router } from "expo-router";
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { Keyboard } from 'react-native';
+
 
 export default function HomeScreen() {
     const [series, setSeries] = useState('');
     const [reps, setReps] = useState('');
     const [repTime, setRepTime] = useState('00:00');
     const [restTime, setRestTime] = useState('00:00');
+
 
     const handleStartSession = () => {
         router.push({
