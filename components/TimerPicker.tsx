@@ -9,9 +9,10 @@ interface TimerPickerProps {
     label: string;
     onTimeChange: (time: string) => void;
     initialTime?: string | null;
+    onPress: () => void;
 }
 
-const TimerPicker: React.FC<TimerPickerProps> = ({ label, onTimeChange, initialTime }) => {
+const TimerPicker: React.FC<TimerPickerProps> = ({ label, onTimeChange, initialTime, onPress }) => {
     const [showPicker, setShowPicker] = useState(false);
     const [alarmString, setAlarmString] = useState<string | null>(initialTime || null);
 
@@ -25,8 +26,11 @@ const TimerPicker: React.FC<TimerPickerProps> = ({ label, onTimeChange, initialT
     return (
         <View style={styles.timerPickerContainer}>
             <Text style={styles.infoText}>{label}</Text>
-            <TouchableOpacity activeOpacity={0.7} onPress={() => setShowPicker(true)}>
-                <View style={{ alignItems: 'center' }}>
+            <TouchableOpacity activeOpacity={0.7} onPress={() => {
+                setShowPicker(true);
+                onPress();
+                }}>
+                <View style={{ alignItems: 'center', backgroundColor:"#fff", borderColor:"#09DEE8", borderWidth:1}}>
                     <Text style={styles.alarmText}>{alarmString || '00:00'}</Text>
                 </View>
             </TouchableOpacity>
@@ -54,7 +58,7 @@ const TimerPicker: React.FC<TimerPickerProps> = ({ label, onTimeChange, initialT
                 disableInfiniteScroll={true}
                 styles={{
                     theme: 'dark',
-                    confirmButton: { backgroundColor: '#09DEE8', borderColor: '#09DEE8', color: '#fff', width:"90%", textAlign:"center"},
+                    confirmButton: { backgroundColor: '#342FBD', borderColor: '#09DEE8', color: '#fff', width:"90%", textAlign:"center"},
                     cancelButton: { backgroundColor: 'transparent', borderColor: '#342FBD', color: '#fff' , width:"90%", textAlign:"center"},
                     container: {width:"100%", position:"absolute", bottom:0 },
                     pickerContainer: {width:"80%", alignItems:"center", justifyContent:"center",height:200,},
@@ -77,7 +81,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     alarmText: {
-        color: '#fff',
+        color: '#000',
         fontSize: 48,
     },
 });

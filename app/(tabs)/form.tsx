@@ -1,34 +1,49 @@
-import { StyleSheet, TextInput, View, Text, Image } from 'react-native';
+import { StyleSheet, TextInput, View, Text, Image, ScrollView } from 'react-native';
 import TimerPicker from '../../components/TimerPicker';
 import { Button } from "@rneui/base"; 
 import { router } from "expo-router";
+import { useState } from 'react';
+import { Keyboard } from 'react-native';
 
 export default function HomeScreen() {
-    const handleTimeChange = (time: string) => {
-        console.log('Time changed:', time);
+    const [series, setSeries] = useState('');
+    const [reps, setReps] = useState('');
+    const [repTime, setRepTime] = useState('00:00');
+    const [restTime, setRestTime] = useState('00:00');
+
+    const handleStartSession = () => {
+        router.push({
+            pathname: "/session",
+            params: {
+                series,
+                reps,
+                repTime,
+                restTime
+            }
+        });
     };
 
     return (
-        <View style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
             <Image style={styles.images} source={require('../../assets/images/EvoTrackText.png')} />
             <Text style={styles.Text}>Nombre(s) de série(s):</Text>
-            <TextInput style={styles.TextInput} keyboardType='numeric' placeholder='0' placeholderTextColor='#828282' id="serie"></TextInput>
+            <TextInput style={styles.TextInput} keyboardType='numeric' placeholder='0' placeholderTextColor='#828282' value={series} onChangeText={setSeries}></TextInput>
             <Text style={styles.Text}>Nombre(s) de répétition(s):</Text>
-            <TextInput style={styles.TextInput} keyboardType='numeric' placeholder='0' placeholderTextColor='#828282' id="repet"></TextInput>
-            <TimerPicker label="Temps d'une rep:" onTimeChange={handleTimeChange} />
-            <TimerPicker label="Temps de pause:" onTimeChange={handleTimeChange} />
+            <TextInput style={styles.TextInput} keyboardType='numeric' placeholder='0' placeholderTextColor='#828282' value={reps} onChangeText={setReps}></TextInput>
+            <TimerPicker label="Temps d'une rep:" onTimeChange={setRepTime} onPress={() => Keyboard.dismiss()}/>
+            <TimerPicker label="Temps de pause:" onTimeChange={setRestTime} onPress={() => Keyboard.dismiss()}/>
             <Button
-                  buttonStyle={{ width: 150, borderRadius: 8, borderWidth: 2,borderColor: "#09DEE8",backgroundColor:"#342FBD"}}
-                  containerStyle={{ margin: 5, position:"absolute", bottom:30, left:"35%"}}
+                  buttonStyle={{ width: "100%", borderRadius: 8, borderWidth: 2,borderColor: "#09DEE8",backgroundColor:"#342FBD"}}
+                  containerStyle={{ width: "100%",margin: 5, alignSelf:"center"}}
                   disabledTitleStyle={{ color: "#00F" }}
                   loadingProps={{ animating: true }}
                   loadingStyle={{}}
-                  onPress={() => router.push('/session')}
+                  onPress={handleStartSession}
                   title="Commencer"
                   titleProps={{}}
                   titleStyle={{ marginHorizontal: 5 }}
                 />
-        </View>
+        </ScrollView>
     );
 }
 
@@ -40,11 +55,11 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     TextInput: {
-        color: "#fff",
+        color: "#000",
         borderColor: "#09DEE8",
         backgroundColor:"#fff",
         borderWidth: 1,
-        fontSize:28,
+        fontSize:30,
         textAlign:"center",
         width:300,
         height:60,
